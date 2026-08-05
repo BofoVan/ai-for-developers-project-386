@@ -6,4 +6,13 @@ tsp-output/
 dist/
 
 # Dependency directories
-node_modules/.idea/
+node_modules/
+
+# IDE
+.idea/
+
+# Testing / Playwright / Screenshots
+.playwright-mcp/
+*.png
+*.snap.md
+landing-page-snapshot.md

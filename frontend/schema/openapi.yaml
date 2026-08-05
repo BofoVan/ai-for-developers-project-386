@@ -1,0 +1,379 @@
+openapi: 3.1.0
+info:
+  title: Календарь звонков (учебное приложение)
+  version: 1.0.0
+  description: API календаря с разделением на владельца и гостя. Авторизация не требуется.
+tags:
+  - name: Admin
+  - name: Guest
+paths:
+  /admin/bookings:
+    get:
+      operationId: AdminOperations_listBookings
+      summary: Получить бронирования
+      description: Получить список всех предстоящих бронирований (любых типов)
+      parameters:
+        - name: from
+          in: query
+          required: false
+          description: Начало периода (UTC)
+          schema:
+            type: string
+            format: date-time
+          explode: false
+        - name: to
+          in: query
+          required: false
+          description: Конец периода (UTC)
+          schema:
+            type: string
+            format: date-time
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      tags:
+        - Admin
+  /admin/bookings/{bookingId}:
+    delete:
+      operationId: AdminOperations_deleteBooking
+      summary: Удалить бронирование
+      description: Удалить бронирование по идентификатору
+      parameters:
+        - name: bookingId
+          in: path
+          required: true
+          description: ID бронирования, которое требуется удалить
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: There is no content to send for this request, but the headers may be useful.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      tags:
+        - Admin
+  /admin/event-types:
+    post:
+      operationId: AdminOperations_createEventType
+      summary: Создать тип события
+      description: Создать новый тип события
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventType'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      tags:
+        - Admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventTypeCreate'
+    get:
+      operationId: AdminOperations_listEventTypes
+      summary: Получить все типы событий
+      description: Получить все типы событий
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventType'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      tags:
+        - Admin
+  /api/bookings:
+    post:
+      operationId: GuestOperations_createBooking
+      summary: Создать бронирование
+      description: Создать новое бронирование
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConflictError'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      tags:
+        - Guest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingRequest'
+  /api/event-types:
+    get:
+      operationId: GuestOperations_getPublicEventTypes
+      summary: Получить типы событий
+      description: Получить список доступных для бронирования типов событий
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventType'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      tags:
+        - Guest
+  /api/event-types/{eventTypeId}/slots:
+    get:
+      operationId: GuestOperations_getAvailableSlots
+      summary: Получить свободные слоты
+      description: Получить свободные слоты для конкретного типа события
+      parameters:
+        - name: eventTypeId
+          in: path
+          required: true
+          description: ID типа события
+          schema:
+            type: string
+            format: uuid
+        - name: from
+          in: query
+          required: false
+          description: Начало окна поиска (UTC), по умолчанию – текущее время
+          schema:
+            type: string
+            format: date-time
+          explode: false
+        - name: to
+          in: query
+          required: false
+          description: Конец окна поиска (UTC), по умолчанию – +14 дней от from
+          schema:
+            type: string
+            format: date-time
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Slot'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      tags:
+        - Guest
+security:
+  - {}
+components:
+  schemas:
+    Booking:
+      type: object
+      required:
+        - id
+        - eventTypeId
+        - slotStart
+        - guestName
+        - guestEmail
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор бронирования
+        eventTypeId:
+          type: string
+          description: Ссылка на тип события
+        slotStart:
+          type: string
+          format: date-time
+          description: Дата и время начала (UTC)
+        guestName:
+          type: string
+          description: Имя гостя
+        guestEmail:
+          type: string
+          description: Email гостя для связи
+    BookingRequest:
+      type: object
+      required:
+        - eventTypeId
+        - slotStart
+        - guestName
+        - guestEmail
+      properties:
+        eventTypeId:
+          type: string
+          description: ID типа события, которое бронируют
+        slotStart:
+          type: string
+          format: date-time
+          description: Желаемое время начала (UTC)
+        guestName:
+          type: string
+          minLength: 1
+          description: Имя гостя
+        guestEmail:
+          type: string
+          format: email
+          description: Email гостя
+    ConflictError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          enum:
+            - SLOT_ALREADY_TAKEN
+        message:
+          type: string
+    EventType:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - durationMinutes
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор типа события
+        name:
+          type: string
+          description: Название типа события (например, 'Созвон по проекту')
+        description:
+          type: string
+          description: Краткое описание для гостей
+        durationMinutes:
+          type: integer
+          format: int32
+          minimum: 1
+          description: Длительность встречи в минутах
+    EventTypeCreate:
+      type: object
+      required:
+        - name
+        - description
+        - durationMinutes
+      properties:
+        name:
+          type: string
+          description: Название типа события
+        description:
+          type: string
+          description: Описание
+        durationMinutes:
+          type: integer
+          format: int32
+          minimum: 1
+          description: Длительность в минутах
+    InternalServerError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          enum:
+            - INTERNAL_SERVER_ERROR
+        message:
+          type: string
+    NotFoundError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          enum:
+            - BOOKING_NOT_FOUND
+        message:
+          type: string
+    Slot:
+      type: object
+      required:
+        - start
+        - end
+      properties:
+        start:
+          type: string
+          format: date-time
+          description: Начало свободного интервала (UTC)
+        end:
+          type: string
+          format: date-time
+          description: Окончание свободного интервала (UTC)
