@@ -18,12 +18,16 @@ jobs:
           node-version: '22'
           cache: 'npm'
       - run: npm ci
-      - run: git fetch origin main
-      - run: >
+      - name: Validate PR commits
+        if: github.event_name == 'pull_request'
+        run: >
           npx commitlint
-          --from ${{ github.event.pull_request.base.sha || 'origin/main' }}
-          --to ${{ github.event.pull_request.head.sha || 'HEAD' }}
+          --from ${{ github.event.pull_request.base.sha }}
+          --to ${{ github.event.pull_request.head.sha }}
           --verbose
+      - name: Validate last commit on push
+        if: github.event_name == 'push'
+        run: npx commitlint --last --verbose
 
   backend-unit-tests:
     runs-on: ubuntu-latest

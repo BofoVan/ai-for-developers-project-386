@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
 
+# NOTE: If release-please fails with "GitHub Actions is not permitted to create
+# or approve pull requests", go to Repository Settings → Actions → General →
+# Workflow permissions and select "Read and write permissions".
 permissions:
   contents: write
   pull-requests: write
