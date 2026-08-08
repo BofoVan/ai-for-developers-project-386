@@ -135,6 +135,17 @@ interface AdminOperations {
   @get
   listEventTypes(): EventType[] | InternalServerError;
 
+  @summary("Удалить тип события")
+  @doc("Удалить тип события по идентификатору")
+  @route("/event-types/{eventTypeId}")
+  @delete
+  deleteEventType(
+    @path
+    @doc("ID типа события, которое требуется удалить")
+    @format("uuid")
+    eventTypeId: string
+  ): NoContentResponse | NotFoundError | InternalServerError;
+
   @summary("Получить бронирования")
   @doc("Получить список всех предстоящих бронирований (любых типов)")
   @route("/bookings")

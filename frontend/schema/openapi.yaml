@@ -125,6 +125,36 @@ paths:
                 $ref: '#/components/schemas/InternalServerError'
       tags:
         - Admin
+  /admin/event-types/{eventTypeId}:
+    delete:
+      operationId: AdminOperations_deleteEventType
+      summary: Удалить тип события
+      description: Удалить тип события по идентификатору
+      parameters:
+        - name: eventTypeId
+          in: path
+          required: true
+          description: ID типа события, которое требуется удалить
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: There is no content to send for this request, but the headers may be useful.
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+      tags:
+        - Admin
   /api/bookings:
     post:
       operationId: GuestOperations_createBooking
