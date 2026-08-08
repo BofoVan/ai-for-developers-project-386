@@ -6,9 +6,17 @@
   "dependencies": {
     "@typespec/compiler": "^1.14.0",
     "@typespec/http": "^1.14.0",
-    "@typespec/rest": "^0.84.0",
     "@typespec/openapi": "^1.14.0",
-    "@typespec/openapi3": "^1.14.0"
+    "@typespec/openapi3": "^1.14.0",
+    "@typespec/rest": "^0.84.0"
   },
-  "packageManager": "npm@12.0.2+sha512.b885e890b9418fa1693544d05f53e64f9a73ec194837d4258b15fecdd692347b1dd2a517b1b0cbaf9d31cd8e92c3b70956bd2ecc72833a57b4b3098f5bfa7943"
+  "packageManager": "npm@12.0.2+sha512.b885e890b9418fa1693544d05f53e64f9a73ec194837d4258b15fecdd692347b1dd2a517b1b0cbaf9d31cd8e92c3b70956bd2ecc72833a57b4b3098f5bfa7943",
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "husky": "^9.1.7"
+  },
+  "scripts": {
+    "prepare": "husky"
+  }
 }

@@ -1,0 +1,12 @@
+{
+  "packages": {
+    "frontend": {
+      "package-name": "frontend",
+      "release-type": "node"
+    },
+    "backend": {
+      "package-name": "backend",
+      "release-type": "node"
+    }
+  }
+}
