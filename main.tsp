@@ -84,11 +84,14 @@ model BookingRequest {
 }
 
 model Slot {
-  @doc("Начало свободного интервала (UTC)")
+  @doc("Начало интервала (UTC)")
   start: utcDateTime;
 
-  @doc("Окончание свободного интервала (UTC)")
+  @doc("Окончание интервала (UTC)")
   end: utcDateTime;
+
+  @doc("Доступен ли слот для бронирования")
+  isAvailable: boolean;
 }
 
 // Ошибка при попытке занять уже занятое время

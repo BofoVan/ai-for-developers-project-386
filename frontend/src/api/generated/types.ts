@@ -231,14 +231,16 @@ export interface components {
         Slot: {
             /**
              * Format: date-time
-             * @description Начало свободного интервала (UTC)
+             * @description Начало интервала (UTC)
              */
             start: string;
             /**
              * Format: date-time
-             * @description Окончание свободного интервала (UTC)
+             * @description Окончание интервала (UTC)
              */
             end: string;
+            /** @description Доступен ли слот для бронирования */
+            isAvailable: boolean;
         };
     };
     responses: never;

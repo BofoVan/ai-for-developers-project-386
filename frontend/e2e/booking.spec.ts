@@ -103,7 +103,8 @@ test.describe('BookingPage', () => {
     await page.getByRole('button', { name: /^13:00/ }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
     await page.getByRole('button', { name: 'Подтвердить запись' }).click();
-    await expect(page.getByText('Введите имя')).toBeVisible();
+    await expect(page.getByLabel(/Ваше имя/)).toHaveAttribute('aria-invalid', 'true');
+    await expect(page.getByLabel(/Email/)).toHaveAttribute('aria-invalid', 'true');
   });
 
   test('form validation shows error for invalid email', async ({ page, e2eEnv }) => {
@@ -114,7 +115,8 @@ test.describe('BookingPage', () => {
     await page.getByLabel(/Ваше имя/).fill('Иван Петров');
     await page.getByLabel(/Email/).fill('invalid-email');
     await page.getByRole('button', { name: 'Подтвердить запись' }).click();
-    await expect(page.getByText('Введите корректный email')).toBeVisible();
+    await expect(page.getByLabel(/Ваше имя/)).toHaveAttribute('aria-invalid', 'false');
+    await expect(page.getByLabel(/Email/)).toHaveAttribute('aria-invalid', 'true');
   });
 
   test('successful booking shows toast and closes dialog', async ({ page, e2eEnv }) => {

@@ -3,6 +3,7 @@ import { store, type EventType } from '../store/memoryStore.js';
 export interface Slot {
   start: string;
   end: string;
+  isAvailable: boolean;
 }
 
 export function generateSlots(
@@ -50,12 +51,11 @@ export function generateSlots(
         if (slotEnd > dayEnd) break;
 
         if (slotStart >= from && slotStart <= to) {
-          if (!store.isSlotTaken(slotStart, eventType.durationMinutes)) {
-            slots.push({
-              start: slotStart.toISOString(),
-              end: slotEnd.toISOString(),
-            });
-          }
+          slots.push({
+            start: slotStart.toISOString(),
+            end: slotEnd.toISOString(),
+            isAvailable: !store.isSlotTaken(slotStart, eventType.durationMinutes),
+          });
         }
 
         slotStart = new Date(slotStart.getTime() + durationMs);
