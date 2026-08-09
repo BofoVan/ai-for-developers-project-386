@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon --exec tsx src/index.ts",
     "start": "tsx src/index.ts",
+    "build": "tsc",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
     "test:watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch",
     "test:coverage": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage"
