@@ -33,7 +33,7 @@ describe('generateSlots', () => {
     expect(slots).toEqual([]);
   });
 
-  test('excludes taken slots', () => {
+  test('marks taken slots as unavailable', () => {
     const et = store.createEventType({ name: 'Test', description: 'x', durationMinutes: 30 });
     store.createBooking({
       eventTypeId: et.id,
@@ -42,9 +42,12 @@ describe('generateSlots', () => {
       guestEmail: 'a@a.com',
     });
     const slots = generateSlots(et.id, '2026-08-10T00:00:00Z', '2026-08-10T23:59:59Z');
-    const hasNineAm = slots!.some((s) => s.start === '2026-08-10T09:00:00.000Z');
-    expect(hasNineAm).toBe(false);
-    expect(slots!.length).toBe(17); // 18 total - 1 taken
+    const nineAm = slots!.find((s) => s.start === '2026-08-10T09:00:00.000Z');
+    expect(nineAm).toBeDefined();
+    expect(nineAm!.isAvailable).toBe(false);
+    expect(slots!.length).toBe(18); // all slots returned, including taken
+    const availableCount = slots!.filter((s) => s.isAvailable).length;
+    expect(availableCount).toBe(17);
   });
 
   test('uses default 14-day range when from/to not provided', () => {

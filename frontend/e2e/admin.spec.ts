@@ -6,7 +6,7 @@ test.describe('AdminPage', () => {
   });
 
   test('renders event types and bookings tables', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'Панель администратора' })).toBeVisible();
+    await expect(page.getByText('Типы встреч')).toBeVisible();
     await expect(page.getByText('Типы встреч', { exact: true })).toBeVisible();
     await expect(page.getByText('Консультация по проекту')).toBeVisible();
     await expect(page.getByText('30 мин')).toBeVisible();
@@ -17,21 +17,21 @@ test.describe('AdminPage', () => {
   });
 
   test('creates a new event type', async ({ page }) => {
+    await page.getByRole('button', { name: 'Создать тип встречи' }).click();
     await page.getByPlaceholder('Например, Созвон по проекту').fill('Тестовая встреча');
     await page.getByPlaceholder('Краткое описание для гостей').fill('Описание тестовой встречи');
-    const durationInput = page.locator('input[type="number"]').first();
-    await durationInput.fill('45');
+    await page.getByRole('button', { name: '45 мин' }).click();
     await page.getByRole('button', { name: 'Добавить' }).click();
     await expect(page.getByText('Тестовая встреча')).toBeVisible();
-    await expect(page.getByText('45 мин')).toBeVisible();
+    await expect(page.locator('table').getByText('45 мин')).toBeVisible();
   });
 
   test('deletes an event type with confirmation', async ({ page }) => {
     // Create a disposable event type to avoid affecting seed data
+    await page.getByRole('button', { name: 'Создать тип встречи' }).click();
     await page.getByPlaceholder('Например, Созвон по проекту').fill('Временный тип');
     await page.getByPlaceholder('Краткое описание для гостей').fill('Описание временного типа');
-    const durationInput = page.locator('input[type="number"]').first();
-    await durationInput.fill('20');
+    await page.getByRole('button', { name: '20 мин' }).click();
     await page.getByRole('button', { name: 'Добавить' }).click();
     await expect(page.getByText('Временный тип')).toBeVisible();
 
