@@ -4,6 +4,7 @@ WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm ci
 COPY frontend/ ./
+ENV VITE_API_BASE_URL=''
 RUN npm run build
 
 # Этап 2: Сборка и запуск бэкенда
