@@ -30,5 +30,4 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: kimi-k2.5
-          mentions: '/oc,/opencode'
+          model: opencode/kimi-k2.5
