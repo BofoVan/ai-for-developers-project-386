@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.2](https://github.com/BofoVan/ai-for-developers-project-386/compare/frontend-v1.0.1...frontend-v1.0.2) (2026-10-09)
+
+
+### Bug Fixes
+
+* **frontend:** change page title to 'Календарь встреч' ([bf2f376](https://github.com/BofoVan/ai-for-developers-project-386/commit/bf2f37636af6c0694dc1fea1ae4d4263146735e2))
+* **frontend:** replace default page title with meaningful name ([3cf4f73](https://github.com/BofoVan/ai-for-developers-project-386/commit/3cf4f73755307312388da90dd32c5a23be295571))
+
 ## [1.0.1](https://github.com/BofoVan/ai-for-developers-project-386/compare/frontend-v1.0.0...frontend-v1.0.1) (2026-08-09)
 
 
